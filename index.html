@@ -148,18 +148,22 @@
                     <div class="goods-hd">
                         <span class="twohandhouse">二手好房</span>
                         <span class="foryouselect">为你精选</span>
-                        <span class="morehouse fr"><li to="/buyhouse">更多二手好房</router-link></span>
+                        <span class="morehouse fr">
+                            <a href="pages/buyhouse.html">更多二手好房</a>
+                        </span>
                     </div>
                     <div class="goods-bd">
                         <ul>
-                            <li  @click="toSkip(item)" :key="index" v-for="(item,index) in houseRecmdlist" v-show="index<=3?true:false">
-                                <div class="image">
-                                    <img :src=item.housePic />
-                                </div>
-                                <div class="description">
-                                    <p>{{item.houseTitle}}</p>
-                                    <p>{{item.districtName}} {{item.houseType}} {{item.builtArea}}平米</p>
-                                </div>
+                            <li :key="index" v-for="(item,index) in houseRecmdlist" v-show="index<=3?true:false">
+                                <a :href="'pages/twohandhousedetail/'+item.sdid">
+                                    <div class="image">
+                                        <img :src=item.housePic />
+                                    </div>
+                                    <div class="description">
+                                        <p>{{item.houseTitle}}</p>
+                                        <p>{{item.districtName}} {{item.houseType}} {{item.builtArea}}平米</p>
+                                    </div>
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -176,14 +180,16 @@
                     </div>
                     <div class="goods-bd">
                         <ul>
-                            <li  @click="toSkiptwo(item)"  v-for="item in hotBuilding" >
-                                <div class="image">
-                                    <img :src=item.housePic />
-                                </div>
-                                <div class="description">
-                                    <p>{{item.buildName}}</p>
-                                    <p><div class="fl">{{item.avgSalePrice}}元/平</div> <div class="fr">{{item.buildAge}}年建</div></p>
-                                </div>
+                            <li v-for="(item,index) in hotBuilding" v-show="index<=3?true:false">
+                                <a :href="'pages/estatedetail'+item.sdid">
+                                    <div class="image">
+                                        <img :src=item.housePic />
+                                    </div>
+                                    <div class="description">
+                                        <p>{{item.buildName}}</p>
+                                        <p><div class="fl">{{item.avgSalePrice}}元/平</div> <div class="fr">{{item.buildAge}}年建</div></p>
+                                    </div>
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -194,18 +200,22 @@
                     <div class="goods-hd">
                         <span class="twohandhouse">时尚租房</span>
                         <span class="foryouselect">品质生活</span>
-                        <span class="morehouse fr"><li to="/rentHouse">更多好房</router-link></span>
+                        <span class="morehouse fr">
+                            <a href="pages/rentHouse.html">更多好房</a>
+                        </span>
                     </div>
                     <div class="goods-bd">
                         <ul>
-                            <li v-for="(item,index) in rentHouseRecmdlist" v-show="index<=3?true:false"  @click="toSkipthree(item)" >
-                                <div class="image">
-                                    <img :src= item.housePic />
-                                </div>
-                                <div class="description">
-                                    <p>{{item.houseTitle}}</p>
-                                    <p>{{item.districtName}} {{item.houseType}} {{item.builtArea}}平米</p>
-                                </div>
+                            <li v-for="(item,index) in rentHouseRecmdlist" v-show="index<=3?true:false">
+                                <a :href="'rentHouseDetail/'+item.sdid">
+                                    <div class="image">
+                                        <img :src= item.housePic />
+                                    </div>
+                                    <div class="description">
+                                        <p>{{item.houseTitle}}</p>
+                                        <p>{{item.districtName}} {{item.houseType}} {{item.builtArea}}平米</p>
+                                    </div>
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -284,7 +294,7 @@
                 <div class="container">
                     <div class="friendship">
                         <!--a站外 router-link站内-->
-                        <span><router-link tag="a" to="/group/groupintourde">集团简介</router-link></span>  <span style="margin-left: 28px;">|</span>
+                        <span><a href="/group/groupintourde">集团简介</a></span>  <span style="margin-left: 28px;">|</span>
                         <span><a href="">集团文化</a></span>   <span style="margin-left: 28px;">|</span>
                         <span><a href="">联系我们</a></span>   <span style="margin-left: 28px;">|</span>
                         <span><a href="">南宁小区</a></span>   <span style="margin-left: 28px;">|</span>
@@ -332,7 +342,7 @@
     <script src="js/url.js"></script>
     <script src="js/chineseToPinyin.js"></script>
     <script>
-        var vm = new Vue({
+        var Vm = new Vue({
             el: '#app',
             data: {
                 cityChange: false, //城市阴影
@@ -349,6 +359,7 @@
                 houseTypeId: 11,
                 searchinput:'',//搜索关键词
                 placeholderTextType: 0,//搜索关键词类型
+                isLogin: false,
                 params: {
                     "areaId": null,
                     "districtId": null,
@@ -367,33 +378,15 @@
                     "scity": null
                 }
             },
-            computed: {
-                isLogin: function() {
-                    // return this.$store.state.logined;
-                },
-                userInfo: function() {
-                    // return this.$store.state.LoginedUser;
-                }
-            },
             created: function(){
                 this.defaultCityRequest();
-            },
-            watch: {
-                selectCity: function() {
-                    axios.get(URL.APPOINT_DETAILLIST +"?pageNo="+1,{
-                        scity: JSON.parse(localStorage.selectCity),//用户选定城市
-                    })
-                    .then(function(response) {
-                    let newData = response.data.data;
-                    //初始化清单列表
-                    // this.$store.commit('CHUSHIHUA', newData);
-                    })
-                }
             },
             methods: {
                 //默认定位
                 defaultCityRequest: function(){
-                    axios.get(URL.DEFAULT_CITY)
+                    let that = this;
+                    axios
+                    .get(URL.DEFAULT_CITY)
                     .then(function(response) {
                         let cityName = response.data.data.name;
                         this.selectCity = cityName;
@@ -403,11 +396,11 @@
                         localStorage.selectCity = JSON.stringify(response.data.data);
                         //借助百度定位
                         if(!response.data.data){
-                            this.baiduCityRequest();
+                            that.baiduCityRequest();
                         }
                     })
                     .catch(function(error){
-                        this.baiduCityRequest();
+                        that.baiduCityRequest();
                     })
                 },
                 //百度定位
@@ -431,13 +424,13 @@
                     });
                 },
                 renderRequest: function(cityCode) {
+                    let that = this;
                     //请求城市列表
                     let hot_city = "热门";
                     let hot_city_len = 2;
                     let map = {
                         "hot": {title: hot_city,item: []}
                     }
-
                     axios
                     .get(URL.DICTIONARY_CITYS)
                     .then(function(response){
@@ -474,7 +467,7 @@
                             ret.sort(function(a, b){
                                 return a.title.charCodeAt() - b.title.charCodeAt()
                             })
-                            this.city = hot.concat(ret);
+                            that.city = hot.concat(ret);
                         })
 
                     })
@@ -489,7 +482,7 @@
                     axios
                     .get(URL.HOUSE_RECMDLIST + cityCode)
                     .then(function(response) {
-                        this.houseRecmdlist = response.data.data
+                        that.houseRecmdlist = response.data.data
                     })	
 
                     //获取首页热门小区
@@ -498,14 +491,14 @@
                         params:{pageNo :1,pageSize:3}
                     })
                     .then(function(response){
-                        this.hotBuilding = response.data.data
+                        that.hotBuilding = response.data.data
                     })	
 
                     //获取首页时尚租房
                     axios
                     .get(URL.RENTHOUSE_RECMDLIST + cityCode)
                     .then(function(response){
-                        this.rentHouseRecmdlist = response.data.data
+                        that.rentHouseRecmdlist = response.data.data
                     })
                 },
                 //登陆
@@ -545,21 +538,6 @@
                         this.souText = '请输入区域丶名开始找房';
                         break;
                     }
-                },
-                //二手房的 更多
-                toSkip: function(item) {  
-                    // let path = "/buyhouse/twohandhousedetail/"+item.sdid;
-                    // this.$router.push({path:path});
-                },
-                //小区房的 更多
-                toSkiptwo: function(item) {  
-                    // let path = "/estatedetail/"+item.sdid;
-                    // this.$router.push({path:path});
-                },
-                //时尚租房的 更多
-                toSkipthree: function(item) {  
-                    // let path = "/rentHouseDetail/"+item.sdid;
-                    // this.$router.push({path:path});
                 },
                 //选定地址
                 changeAddress: function(item) {
