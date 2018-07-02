@@ -1,0 +1,80 @@
+@charset "utf-8";
+.footer{
+	width: 100%;
+	height: 380px;
+	background-color: #000;
+	background-image: url("../imgs/home/di.png");
+	background-repeat: no-repeat;
+	background-position: center 0;
+	background-size: 1920px auto;
+	padding-top: 30px;
+	box-sizing: border-box;
+}
+.footer .friendship{
+	height: 23px;
+	text-align: center;
+	color: #FFFFFF;
+	font-size: 19px;
+}
+.footer .friendship span a{
+	margin-left: 28px;
+	color: #FFFFFF;
+}
+.footer .footer-bd{
+    display:-webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -moz-flex-direction: row; 
+    -webkit-flex-direction: row;
+    flex-wrap: nowrap;
+    -webkit-justify-content:center;
+    justify-content:center;
+	margin-top: 80px;
+}
+
+.footer-bd .footer-bd-one,
+.footer-bd .footer-bd-three{
+	flex: 400px 0 0;
+	width:400px;
+}
+.footer-bd .footer-bd-two{
+	flex: 1;
+}
+.footer-bd .footer-bd-two div:nth-of-type(1){
+	color: #FFFFFF;
+}
+.footer-bd .footer-bd-two p{
+	color: #FFFFFF;
+	line-height: 1;
+}
+.footer-bd .footer-bd-three>div{
+	float: left;
+	width: 128px;
+	margin-left: 44px;
+}
+.footer-bd .image{
+	height: 126px;
+}
+.footer-bd .image+div{
+	color: #FFFFFF;
+}
+.footer-bd .image img{
+	width: 100%;
+	height: 100%;
+}
+.footer-ft{
+	margin-top: 25px;
+	height: 47px;
+	text-align: center;
+}
+.footer-ft p{
+	margin-top: 10px;
+	color: #FFFFFF;
+	line-height: 1;
+}
+.adress{
+	margin-top: 10px;
+	font-size: 16px;
+}

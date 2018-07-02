@@ -1,0 +1,589 @@
+<!-- 首页 -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">   
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>世华地产-官网</title>
+    <link rel="shortcut icon" type="image/x-icon" href="imgs/favicon.ico" />
+    <link rel="stylesheet" href="css/reset.css"> 
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/iconfont.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <script src="http://api.map.baidu.com/api?v=2.0&ak=CWIQ5HNNV8jAcGZ9SpNzkozq5DXOLdTH"></script>
+  </head>
+  <body>
+    <div id="app">
+        <template>
+        <div class="home">
+            <div class="header">
+                <transition name="fade">
+                    <div class="shadowlay" v-if="cityChange" @click="toggleCity()"></div>
+                </transition>
+                <div class="container"  style="position:relative">
+                    <div style="position:absolute;top:0px;left:0;">
+                        <a href="" class="logo" ><img src="imgs/home/logo1.png" /></a>
+                        <span class="iconfont xhf-icon-location location" @click="toggleCity()">{{selectCity}}</span>
+                        <transition name="bounce">
+                            <div class="city-change " v-if="cityChange">
+                                <span class="close" @click="toggleCity()"></span>
+                                <div class="title">选择城市
+                                    <div class="city-tab">
+                                        <span class="code1">热门</span>
+                                        <a :key="index" v-for="(item1,index) in city[0].item"
+                                            @click="changeAddress(item1.name)">
+                                            {{item1.name}}
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="title-line"></div>
+                                <div class="fc-main clear">
+                                    <div class="fl citys-l">
+                                        <ul>
+                                            <li class="clear" :key="index1" v-for="(item1,index1) in city" >
+                                                <span class="code-title fl">{{item1.title}}</span>
+                                                <div class="city-enum fl">
+                                                    <a :key="index2"
+                                                        v-for="(item2,index2) in item1.item"
+                                                        @click="changeAddress(item2.name)">
+                                                        {{item2.name}}
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </transition>
+                    </div>
+                    <div class="navmenu fr">
+                        <ul class="item1">
+                            <li>
+                                <div v-if="!isLogin">
+                                    <i class="iconfont xhf-icon-yonghu"></i>
+                                    <span class="login" @click="login()">登录</span> 
+                                    <span>/</span>
+                                    <span class="register" @click="register()">立即注册</span>
+                                </div>
+                                <div v-else>
+                                    <div class="headImage">
+                                        <img :src="userInfo.headImage?userInfo.headImage:'imgs/home/avatar.png'">
+                                    </div>
+                                    <a href="/mine">{{userInfo.nickname}}</a>
+                                    <span>/</span> 
+                                    <span class="logout"  @click="logout()">退出</span>
+                                </div>
+                                <ul class="item4" v-if="isLogin">
+                                    <li><a href="">消息</a></li>
+                                    <li><a href="">个人账户</a></li>
+                                    <li><a href="">预约看房</a></li>
+                                    <li><a href="">我的收藏</a></li>
+                                    <li><a href="">我的委托</a></li>
+                                </ul>
+                            </li>
+                            
+                            <li>更多
+                                <ul>
+                                    <li><a href="pages/houseestate.html">小区找房</a></li>
+                                    <li><a href="pages/agencyBusiness.html">代办业务</a></li>
+                                    <li><a href="pages/convenienceservices.html">便民服务</a></li>
+                                    <li><a href="pages/housetuoguan.html">房屋托管</a></li>
+                                    <li><a href="pages/decoration.html">装修</a></li>
+                                    <li><a href="pages/publicgood.html">世华公益</a></li>
+                                    <li><a href="pages/consultant.html">咨询</a></li>
+                                    <li><a href="pages/buyhouseguide.html">购房指南</a></li>
+                                    <li><a href="pages/industryconsultation.html">行业咨询</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="pages/residence.html">旅居投资</a></li>
+                            <li><a href="pages/forginwork.html">海外置业</a></li>
+                            <li><a href="pages/shoper.html">找门店</a></li>
+                            <li><a href="pages/broker.html">找经纪人</a></li>
+                            <li>业主委托
+                                <ol>
+                                    <li><a href="pages/rent.html">我要租房</a></li>
+                                    <li><a href="pages/sell.html">我要出售</a></li>
+                                </ol>
+                            </li>
+                            <li><a href="pages/rentHouse.html">租房</a></li>
+                            <li><a href="pages/newHouse.html">新房</a></li>
+                            <li><a href="pages/buyHouse.html">二手房</a></li>
+                            <li><a href="index.html">首页</a></li>
+                        </ul> 
+                    </div>
+                    <div class="search-box-wrap">
+                        <div class="search-hd">
+                            <span @click="placeholderText(0)">二手房</span>
+                            <span @click="placeholderText(1)">租房</span>
+                            <span @click="placeholderText(2)">小区</span>
+                        </div>
+                        <div class="search-bd">
+                            <i ref="sanjiao" class="tip iconfont xhf-icon-sanjiaoxing-up"></i>
+                            <input class="search-box" :placeholder="souText" v-model="searchinput" @keyup.enter="searchHouse()"></input>
+                            <div class="search-box-btn fr" @click="searchHouse()">开始找房</div>
+                        </div>
+                        <!-- <router-link class="mapSearchHouse" tag="div" :to="{path:'mapSearch',query:{houseType:houseTypeId}}">
+                            <i class="iconfont icon-location"></i>
+                            <span>地图找房</span>
+                        </router-link> -->
+                    </div>
+                </div>
+            </div>
+            <div class="statistics">
+                <div class="container">
+                    <div>
+                        <p class="price">{{houseUsed.avgPrice}} <span>元</span></p>
+                        <p>全市{{houseUsed.month}}月均价</p>
+                    </div>
+                    <div>
+                        <p class="number">{{houseUsed.suiteCount }}<span>套</span></p>
+                        <p>世华{{houseUsed.month}}月份成交量</p>
+                    </div>
+                </div>
+            </div>
+            <div class="section bgColor1">
+                <div class="container">
+                    <div class="goods-hd">
+                        <span class="twohandhouse">二手好房</span>
+                        <span class="foryouselect">为你精选</span>
+                        <span class="morehouse fr"><li to="/buyhouse">更多二手好房</router-link></span>
+                    </div>
+                    <div class="goods-bd">
+                        <ul>
+                            <li  @click="toSkip(item)" :key="index" v-for="(item,index) in houseRecmdlist" v-show="index<=3?true:false">
+                                <div class="image">
+                                    <img :src=item.housePic />
+                                </div>
+                                <div class="description">
+                                    <p>{{item.houseTitle}}</p>
+                                    <p>{{item.districtName}} {{item.houseType}} {{item.builtArea}}平米</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="section bgColor2" id="purchaseGuide">
+                <div class="container">
+                    <div class="goods-hd">
+                        <span class="twohandhouse">优质小区</span>
+                        <span class="foryouselect">为你推荐</span>
+                        <span class="morehouse fr">
+                            <a href="pages/houseestate.html">更多小区</a>
+                        </span>
+                    </div>
+                    <div class="goods-bd">
+                        <ul>
+                            <li  @click="toSkiptwo(item)"  v-for="item in hotBuilding" >
+                                <div class="image">
+                                    <img :src=item.housePic />
+                                </div>
+                                <div class="description">
+                                    <p>{{item.buildName}}</p>
+                                    <p><div class="fl">{{item.avgSalePrice}}元/平</div> <div class="fr">{{item.buildAge}}年建</div></p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="section bgColor3">
+                <div class="container">
+                    <div class="goods-hd">
+                        <span class="twohandhouse">时尚租房</span>
+                        <span class="foryouselect">品质生活</span>
+                        <span class="morehouse fr"><li to="/rentHouse">更多好房</router-link></span>
+                    </div>
+                    <div class="goods-bd">
+                        <ul>
+                            <li v-for="(item,index) in rentHouseRecmdlist" v-show="index<=3?true:false"  @click="toSkipthree(item)" >
+                                <div class="image">
+                                    <img :src= item.housePic />
+                                </div>
+                                <div class="description">
+                                    <p>{{item.houseTitle}}</p>
+                                    <p>{{item.districtName}} {{item.houseType}} {{item.builtArea}}平米</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="section bgColor2" id="purchaseGuide">
+                <div class="container">
+                    <div class="goods-hd">
+                        <span class="twohandhouse">新盘推荐</span>
+                        <span class="foryouselect">新起点</span>
+                        <span class="morehouse fr"><li to="">更多好房</router-link></span>
+                    </div>
+                    <div class="goods-bd">
+                        <ul>
+                            <li v-for="item in [1,1,1]">
+                                <div class="image">
+                                    <img src="imgs/home/xiaoqu.png" />
+                                </div>
+                                <div class="description">
+                                    <p>梵谷水郡两居室, 满五唯一</p>
+                                    <p>梵谷水郡 两室一厅 100平米</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="section bgColor4" id="purchaseGuide">
+                <div class="container">
+                    <div class="goods-hd">
+                        <span class="twohandhouse">行业资讯</span>
+                        <span class="foryouselect">了解更多房产知识</span>
+                        <span class="morehouse fr"><li to="">更多房产知识</router-link></span>
+                    </div>
+                    <div class="goods-bd">
+                        <ul>
+                            <li v-for="item in [1,1,1]">
+                                <div class="image">
+                                    <img src="imgs/home/goufang.png" />
+                                </div>
+                                <div class="description">
+                                    <p>梵谷水郡两居室, 满五唯一</p>
+                                    <p>梵谷水郡 两室一厅 100平米</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="advertisement">
+                <div class="container">
+                    <div class="content">
+                        <h3 class="title">世华易居APP</h3>
+                        <h4 class="description">锁定真实房源 哪怕市场变幻</h4>
+                        <p>购房宝APP 提供二手房丶新房丶租房丶商业地产真实信息,</br>
+                            一键委托,快速交易。更有世华地产公司强大品牌支持，买卖放心。
+                        </p>
+                        <div class="btngroup">
+                            <div><img src="imgs/home/Android.png" alt="" /></div>
+                            <div><img src="imgs/home/iphone.png" alt="" /></div>
+                        </div>
+                        <div class="QRcode">
+                            <div class="image">
+                                <img src="imgs/home/erwm.png" alt="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </template>
+
+        <!--脚部start-->
+        <footer>
+            <div class="footer">
+                <div class="container">
+                    <div class="friendship">
+                        <!--a站外 router-link站内-->
+                        <span><router-link tag="a" to="/group/groupintourde">集团简介</router-link></span>  <span style="margin-left: 28px;">|</span>
+                        <span><a href="">集团文化</a></span>   <span style="margin-left: 28px;">|</span>
+                        <span><a href="">联系我们</a></span>   <span style="margin-left: 28px;">|</span>
+                        <span><a href="">南宁小区</a></span>   <span style="margin-left: 28px;">|</span>
+                        <span><a href="">南宁小区联系人</a></span>
+                    </div>
+                    <div class="footer-bd">
+                        <div class="footer-bd-one">
+                            <img src="imgs/home/logo2.png" alt="" />
+                        </div>
+                        <div class="footer-bd-two">
+                            <div><img src="imgs/home/phone.png" style="margin-right: 10px;" /><span style="font-size: 45px;">0779-3837272</span></div>
+                            <div style="margin-left: 47px;">
+                                <p class="adress">地址:广西北海市北海大道与湖南路交界</p>
+                                <p class="adress">邮编:537100</p>
+                                <p class="adress">东旭华庭106号铺</p>
+                            </div>
+                        </div>
+                        <div class="footer-bd-three">
+                            <div>
+                                <div class="image">
+                                    <img src="imgs/home/bigerwm.png" alt="" />
+                                </div>
+                                <div style="font-size: 16px;margin-top: 5px;">扫一扫,关注我们</div>
+                            </div>
+                            <div>
+                                <div class="image">
+                                    <img src="imgs/home/bigerwm.png" alt="" />
+                                </div>
+                                <div style="font-size: 16px;margin-top: 5px;">扫一扫,关注我们</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer-ft">
+                        <p>Copyright 2018 广西世华房地产代理公司 桂ICP 100321123</p>
+                        <p>联系电话: 0779-3837272 | 地址:广西北海市北海大道与湖南路交界东旭华庭106号铺</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!--脚部end-->
+
+    </div>
+    <script src="js/vue.min.js"></script>
+    <script src="js/axios.min.js"></script>
+    <script src="js/url.js"></script>
+    <script src="js/chineseToPinyin.js"></script>
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                cityChange: false, //城市阴影
+                souText: '请输入区域丶商圈或小区名开始找房',
+                city: [], //城市列表
+                showbox: 0, //显示对应的dialog
+                address: '',//定位城市
+                selectCity: '定位中...',//用户选择城市
+                houseRecmdlist:[] , //二手房为你精选
+                rentHouseRecmdlist:[],  //时尚租房
+                hotBuilding:[],    //热门小区
+                newbuildindex:[],//首页新房
+                houseUsed:"",  //房源统计
+                houseTypeId: 11,
+                searchinput:'',//搜索关键词
+                placeholderTextType: 0,//搜索关键词类型
+                params: {
+                    "areaId": null,
+                    "districtId": null,
+                    "houseDecor": "",
+                    "houseDirec": "",
+                    "houseFeature": "",
+                    "houseForm": "",
+                    "keyword": "",
+                    "maxBuildArea": null,
+                    "maxPrice": null,
+                    "minBuildArea": null,
+                    "minPrice": null,
+                    "pageNo": 1,
+                    "pageSize": null,
+                    "roomsNum": null,
+                    "scity": null
+                }
+            },
+            computed: {
+                isLogin: function() {
+                    // return this.$store.state.logined;
+                },
+                userInfo: function() {
+                    // return this.$store.state.LoginedUser;
+                }
+            },
+            created: function(){
+                this.defaultCityRequest();
+            },
+            watch: {
+                selectCity: function() {
+                    axios.get(URL.APPOINT_DETAILLIST +"?pageNo="+1,{
+                        scity: JSON.parse(localStorage.selectCity),//用户选定城市
+                    })
+                    .then(function(response) {
+                    let newData = response.data.data;
+                    //初始化清单列表
+                    // this.$store.commit('CHUSHIHUA', newData);
+                    })
+                }
+            },
+            methods: {
+                //默认定位
+                defaultCityRequest: function(){
+                    axios.get(URL.DEFAULT_CITY)
+                    .then(function(response) {
+                        let cityName = response.data.data.name;
+                        this.selectCity = cityName;
+                        //这是页面所有请求的开始
+                        this.changeAddress(cityName);
+                        localStorage.address = cityName;
+                        localStorage.selectCity = JSON.stringify(response.data.data);
+                        //借助百度定位
+                        if(!response.data.data){
+                            this.baiduCityRequest();
+                        }
+                    })
+                    .catch(function(error){
+                        this.baiduCityRequest();
+                    })
+                },
+                //百度定位
+                baiduCityRequest: function() {
+                    let that = this;
+                    let geoc = new BMap.Geocoder(); 
+                    let geolocation = new BMap.Geolocation();
+                    //定位 初始城市
+                    geolocation.enableSDKLocation();//开启SDK辅助定位
+                    geolocation.getCurrentPosition(function(r) {
+                        if(this.getStatus() == BMAP_STATUS_SUCCESS){//逆地址解析成功
+                            let point = new BMap.Point(r.point.lng,r.point.lat);
+                            geoc.getLocation(point, function(rs) {
+                                that.address = rs.addressComponents.city.slice(0, -1);
+                                that.changeAddress(that.address);
+                                localStorage.address = that.address;
+                            });    
+                        }else{//逆地址解析不成功
+                            that.selectCity = city.name?city.name:'北海';
+                        }    
+                    });
+                },
+                renderRequest: function(cityCode) {
+                    //请求城市列表
+                    let hot_city = "热门";
+                    let hot_city_len = 2;
+                    let map = {
+                        "hot": {title: hot_city,item: []}
+                    }
+
+                    axios
+                    .get(URL.DICTIONARY_CITYS)
+                    .then(function(response){
+                        response.data.data.forEach(function(obj, index) {//城市数据 重新map排列
+                            if(index < hot_city_len) {
+                                map['hot'].item.push({
+                                    'name': obj.name,
+                                    'key': obj.value.slice(0, 1).toUpperCase(),
+                                    'value': obj.value
+                                })
+                            }
+                            const type = obj.value.slice(0, 1).toUpperCase();
+                            if(!map[type]) {
+                                map[type] = {
+                                    title: type,
+                                    item: []
+                                }
+                            }
+                            map[type].item.push({
+                                'name': obj.name,
+                                'key': obj.value.slice(0, 1).toUpperCase(),
+                                'value': obj.value
+                            })
+                            let hot = [],
+                                ret = [];
+                            for(let key in map) {
+                                let val = map[key];
+                                if(val.title.match(/[a-zA-Z]/)) {
+                                    ret.push(val)
+                                } else if(val.title === hot_city) {
+                                    hot.push(val)
+                                }
+                            }
+                            ret.sort(function(a, b){
+                                return a.title.charCodeAt() - b.title.charCodeAt()
+                            })
+                            this.city = hot.concat(ret);
+                        })
+
+                    })
+                    //获取首页房源统计	
+                    axios
+                    .get(URL.STATISTICS_HOUSEUSED + cityCode)
+                    .then(function(response) {
+                        this.houseUsed = response.data.data
+                    })
+
+                    //获取首页二手房列表为你精选STATISTICS_HOUSEUSED
+                    axios
+                    .get(URL.HOUSE_RECMDLIST + cityCode)
+                    .then(function(response) {
+                        this.houseRecmdlist = response.data.data
+                    })	
+
+                    //获取首页热门小区
+                    axios
+                    .get(URL.HOTBUILDING+ cityCode , {  
+                        params:{pageNo :1,pageSize:3}
+                    })
+                    .then(function(response){
+                        this.hotBuilding = response.data.data
+                    })	
+
+                    //获取首页时尚租房
+                    axios
+                    .get(URL.RENTHOUSE_RECMDLIST + cityCode)
+                    .then(function(response){
+                        this.rentHouseRecmdlist = response.data.data
+                    })
+                },
+                //登陆
+                login: function() {
+                    // this.$store.commit('OPENLOGINDIALOG', 1);
+                },
+                //注册
+                register: function() {
+                    // this.$store.commit('OPENLOGINDIALOG', 2);			
+                },
+                //退出
+                logout: function() {
+                    // this.$store.dispatch('logout');
+                },
+                //城市列表切换
+                 toggleCity: function() {
+                    this.cityChange = !this.cityChange;
+                },
+                //搜索placeholder内容
+                placeholderText: function(num) {
+                    switch(num) {
+                        case 0:
+                        this.placeholderTextType = 0;
+                        this.$refs.sanjiao.style.left = '0px';
+                        this.souText = '请输入区域丶商圈或小区名开始找房';		
+                        break;
+                        
+                        case 1:
+                        this.placeholderTextType = 1;
+                        this.$refs.sanjiao.style.left = '120px';
+                        this.souText = '请输区名开始租房';		
+                        break;
+    
+                        case 2:
+                        this.placeholderTextType = 2;
+                        this.$refs.sanjiao.style.left = '220px';
+                        this.souText = '请输入区域丶名开始找房';
+                        break;
+                    }
+                },
+                //二手房的 更多
+                toSkip: function(item) {  
+                    // let path = "/buyhouse/twohandhousedetail/"+item.sdid;
+                    // this.$router.push({path:path});
+                },
+                //小区房的 更多
+                toSkiptwo: function(item) {  
+                    // let path = "/estatedetail/"+item.sdid;
+                    // this.$router.push({path:path});
+                },
+                //时尚租房的 更多
+                toSkipthree: function(item) {  
+                    // let path = "/rentHouseDetail/"+item.sdid;
+                    // this.$router.push({path:path});
+                },
+                //选定地址
+                changeAddress: function(item) {
+                    //item是中文, name是拼音
+                    let name = ConvertPinyin(item);
+                    let selectCity = {value: name,name: item};
+                    this.selectCity = item;
+                    this.cityChange = false;
+                    //刷新首页
+                    this.renderRequest(name);
+                    localStorage.selectCity = JSON.stringify(selectCity);	
+                },
+                //开始找房
+                searchHouse: function() {
+                    let num = this.placeholderTextType;
+                    switch(num) {
+                        case 0:return this.$router.push({path:"/buyhouse", query: {word: this.searchinput,type: 0}});
+                        case 1:return this.$router.push({path:"/rentHouse", query: {word: this.searchinput,type: 1}});
+                        case 2:return this.$router.push({path:"/houseestate", query: {word: this.searchinput,type: 2}});
+                    }
+                }
+            }
+        })
+        
+    </script>
+  </body>
+</html>
