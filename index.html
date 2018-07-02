@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">   
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>世华地产-官网</title>
-    <link rel="shortcut icon" type="image/x-icon" href="imgs/favicon.ico" />
-    <link rel="stylesheet" href="css/reset.css"> 
-    <link rel="stylesheet" href="css/global.css">
-    <link rel="stylesheet" href="css/iconfont.css">
+    <link rel="shortcut icon" type="image/x-icon" href="public/imgs/favicon.ico" />
+    <link rel="stylesheet" href="public/css/reset.css"> 
+    <link rel="stylesheet" href="public/css/global.css">
+    <link rel="stylesheet" href="public/css/iconfont.css">
     <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="public/css/footer.css">
     <script src="http://api.map.baidu.com/api?v=2.0&ak=CWIQ5HNNV8jAcGZ9SpNzkozq5DXOLdTH"></script>
   </head>
   <body>
@@ -69,7 +69,7 @@
                                 </div>
                                 <div v-else>
                                     <div class="headImage">
-                                        <img :src="userInfo.headImage?userInfo.headImage:'imgs/home/avatar.png'">
+                                        <img :src="userInfo.headImage?userInfo.headImage:'public/imgs/home/avatar.png'">
                                     </div>
                                     <a href="/mine">{{userInfo.nickname}}</a>
                                     <span>/</span> 
@@ -293,7 +293,6 @@
             <div class="footer">
                 <div class="container">
                     <div class="friendship">
-                        <!--a站外 router-link站内-->
                         <span><a href="/group/groupintourde">集团简介</a></span>  <span style="margin-left: 28px;">|</span>
                         <span><a href="">集团文化</a></span>   <span style="margin-left: 28px;">|</span>
                         <span><a href="">联系我们</a></span>   <span style="margin-left: 28px;">|</span>
@@ -302,10 +301,10 @@
                     </div>
                     <div class="footer-bd">
                         <div class="footer-bd-one">
-                            <img src="imgs/home/logo2.png" alt="" />
+                            <img src="public/imgs/home/logo2.png" alt="" />
                         </div>
                         <div class="footer-bd-two">
-                            <div><img src="imgs/home/phone.png" style="margin-right: 10px;" /><span style="font-size: 45px;">0779-3837272</span></div>
+                            <div><img src="public/imgs/home/phone.png" style="margin-right: 10px;" /><span style="font-size: 45px;">0779-3837272</span></div>
                             <div style="margin-left: 47px;">
                                 <p class="adress">地址:广西北海市北海大道与湖南路交界</p>
                                 <p class="adress">邮编:537100</p>
@@ -315,13 +314,13 @@
                         <div class="footer-bd-three">
                             <div>
                                 <div class="image">
-                                    <img src="imgs/home/bigerwm.png" alt="" />
+                                    <img src="public/imgs/home/bigerwm.png" alt="" />
                                 </div>
                                 <div style="font-size: 16px;margin-top: 5px;">扫一扫,关注我们</div>
                             </div>
                             <div>
                                 <div class="image">
-                                    <img src="imgs/home/bigerwm.png" alt="" />
+                                    <img src="public/imgs/home/bigerwm.png" alt="" />
                                 </div>
                                 <div style="font-size: 16px;margin-top: 5px;">扫一扫,关注我们</div>
                             </div>
@@ -337,10 +336,10 @@
         <!--脚部end-->
 
     </div>
-    <script src="js/vue.min.js"></script>
-    <script src="js/axios.min.js"></script>
-    <script src="js/url.js"></script>
-    <script src="js/chineseToPinyin.js"></script>
+    <script src="public/js/vue.min.js"></script>
+    <script src="public/js/axios.min.js"></script>
+    <script src="public/js/url.js"></script>
+    <script src="public/js/chineseToPinyin.js"></script>
     <script>
         var Vm = new Vue({
             el: '#app',
